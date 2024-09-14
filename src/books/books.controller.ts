@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
@@ -12,9 +12,17 @@ export class BooksController {
     return this.booksService.createBook(createBookDto);
   }
 
+  // @Get()
+  // findAll() {
+  //   return this.booksService.findAllBooks();
+  // }
+
   @Get()
-  findAll() {
-    return this.booksService.findAllBooks();
+  findAll(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 5
+  ) {
+    return this.booksService.findAllBooks(page, limit);
   }
 
   @Get(':id')

@@ -3,7 +3,7 @@ import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Books } from './interface/books.interface';
+import { Books, PaginatedBooks } from './interface/books.interface';
 
 @Injectable()
 export class BooksService {
@@ -24,13 +24,20 @@ export class BooksService {
   }
 
   // Find all books
-  async findAllBooks(): Promise<Books[]> {
+  async findAllBooks(page: number = 1, limit: number = 5): Promise<PaginatedBooks> {
     try {
-      return await this.bookModel.find().exec();
+        const skip = (page - 1) * limit;
+        const [books, total] = await Promise.all([
+            this.bookModel.find().skip(skip).limit(limit).exec(),
+            this.bookModel.countDocuments().exec(),
+        ]);
+
+        return { items: books, total };
+        // return await this.bookModel.find().exec();
     } catch (error) {
-      console.error('Error finding all books:', error);
-      throw error;
-    }  
+        console.error('Error finding all books:', error);
+        throw error;
+    }
   }
 
   // Find a single book by ID

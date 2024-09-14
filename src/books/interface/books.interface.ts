@@ -8,4 +8,7 @@ export interface Books extends Document {
   createdAt?: Date;
 }
 
-
+export interface PaginatedBooks {
+  items: Books[];
+  total: number;
+}

@@ -12,7 +12,8 @@ async function bootstrap() {
     console.error('MongoDB connection error:', err);
   });
   
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
+  app.enableCors();
   await app.listen(3000);
 }
 bootstrap();

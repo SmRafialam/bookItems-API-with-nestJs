@@ -14,39 +14,65 @@ export class BooksService {
   
   // Create a new book
   async createBook(createBookDto: CreateBookDto): Promise<Books> {
-    const newBook = new this.bookModel(createBookDto);
-    return newBook.save();
+    try {
+      const newBook = new this.bookModel(createBookDto);
+      return await newBook.save();
+    } catch (error) {
+      console.error('Error creating book:', error);
+      throw error;
+    }
   }
 
   // Find all books
   async findAllBooks(): Promise<Books[]> {
-    return this.bookModel.find().exec();
+    try {
+      return await this.bookModel.find().exec();
+    } catch (error) {
+      console.error('Error finding all books:', error);
+      throw error;
+    }  
   }
 
   // Find a single book by ID
   async findOneBook(id: string): Promise<Books> {
-    const book = await this.bookModel.findById(id).exec();
-    if (!book) {
-      throw new NotFoundException(`Book with ID ${id} not found`);
+    try {
+      const book = await this.bookModel.findById(id).exec();
+      if (!book) {
+        throw new NotFoundException(`Book with ID ${id} not found`);
+      }
+      return book;   
+
+    } catch (error) {
+      console.error('Error finding book:', error);
+      throw error;
     }
-    return book;
   }
 
   // Update a book by ID
   async updateBook(id: string, updateBookDto: UpdateBookDto): Promise<Books> {
-    const updatedBook = await this.bookModel.findByIdAndUpdate(id, updateBookDto, { new: true }).exec();
-    if (!updatedBook) {
-      throw new NotFoundException(`Book with ID ${id} not found`);
+    try {
+      const updatedBook = await this.bookModel.findByIdAndUpdate(id, updateBookDto, { new: true }).exec();
+      if (!updatedBook) {
+        throw new NotFoundException(`Book with ID ${id} not found`);
+      }
+      return updatedBook;
+    } catch (error) {
+      console.error('Error updating book:', error);
+      throw error;
     }
-    return updatedBook;
   }
 
   // Remove a book by ID
   async removeBook(id: string): Promise<Books> {
-    const deletedBook = await this.bookModel.findByIdAndDelete(id).exec();
-    if (!deletedBook) {
-      throw new NotFoundException(`Book with ID ${id} not found`);
+    try {
+      const deletedBook = await this.bookModel.findByIdAndDelete(id).exec();
+      if (!deletedBook) {
+        throw new NotFoundException(`Book with ID ${id} not found`);
+      }
+      return deletedBook;   
+    } catch(error){
+      console.error('Error deleting book:', error);
+      throw error;
     }
-    return deletedBook;
   }
 }

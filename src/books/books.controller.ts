@@ -19,8 +19,8 @@ export class BooksController {
 
   @Get()
   findAll(
-    @Query('page') page: number = 1,
-    @Query('limit') limit: number = 5
+    @Query('page') page: number,
+    @Query('limit') limit: number
   ) {
     return this.booksService.findAllBooks(page, limit);
   }
